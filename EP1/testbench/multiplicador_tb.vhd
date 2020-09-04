@@ -27,7 +27,8 @@ architecture tb of multiplicador_tb is
   end component;
   
   -- Declaração de sinais para conectar a componente
-  signal clk_in, signed_mult_in: bit := '0';
+  signal clk_in: bit := '0';
+  signal signed_mult_in: bit := '1';
   signal rst_in, start_in, ready_out: bit := '0';
   signal va_in, vb_in: bit_vector(3 downto 0);
   signal result_out: bit_vector(7 downto 0);
@@ -84,9 +85,9 @@ begin
     
     wait for clockPeriod;
 
-    ----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 
-    ---- Caso de teste 2: A=15, B=11
+    ---- Caso de teste 2: A=-1, B=-5
     Va_in <= "1111"; 
     Vb_in <= "1011"; 
     -- pulso do sinal de Start
@@ -97,7 +98,7 @@ begin
     -- espera pelo termino da multiplicacao
     wait until ready_out='1';
     -- verifica resultado
-    assert (result_out/="10100101") report "2.OK: 15x11=10100101 (165)" severity note;
+    assert (result_out/="00000101") report "2.OK: (-1)x(-5)=00000101 (5)" severity note;
     
     wait for clockPeriod;    
 
@@ -120,9 +121,9 @@ begin
  
     ----------------------------------------------------------------------------------
 
-    ---- Caso de teste 4: A=1, B=11
-    Va_in <= "0001"; 
-    Vb_in <= "1011"; 
+    ---- Caso de teste 4: A=3, B=-8
+    Va_in <= "0011"; 
+    Vb_in <= "1000"; 
     -- pulso do sinal de Start
     wait until falling_edge(clk_in);
     start_in <= '1';
@@ -131,7 +132,7 @@ begin
     -- espera pelo termino da multiplicacao
     wait until ready_out='1';
     -- verifica resultado
-    assert (result_out/="00001011") report "4.OK: 1x11=00001011 (11)" severity note;
+    assert (result_out/="11101000") report "4.OK: 3x(-8)=11101000 (-24)" severity note;
     
     wait for clockPeriod;  
     ----------------------------------------------------------------------------------

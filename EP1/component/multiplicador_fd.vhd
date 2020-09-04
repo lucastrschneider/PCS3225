@@ -4,6 +4,8 @@
 --! @author Edson Midorikawa (emidorik@usp.br)
 --! @author Lucas Schneider (lucastrschneider@usp.br)
 --! @date 2020-09-04
+
+--! Last submission: #1645
 -------------------------------------------------------
 
 -------------------------------------------------------
@@ -411,13 +413,13 @@ end architecture;
 --! @brief synchronous multiplier
 -------------------------------------------------------
 
---library ieee;
---use ieee.numeric_bit.rising_edge;
+library ieee;
+use ieee.numeric_bit.all;
 
 entity multiplicador_fd is
   port (
     clock:    in  bit;
-    signed_mult: in bit;
+    sig_mult_fd: in bit;
     Va,Vb:    in  bit_vector(3 downto 0);
     RSTa,CEa: in  bit;
     RSTb,CEb: in  bit;
@@ -484,13 +486,17 @@ architecture structural of multiplicador_fd is
   signal s_bmenos1, s_muxb:  bit_vector(3 downto 0);
   signal s_a8, s_soma, s_rr: bit_vector(7 downto 0);
 
+  signal Va_unsigned, Vb_unsigned: bit_vector(3 downto 0);
+  signal Vr_signed: bit_vector(7 downto 0);
+  signal Va_cond, Vb_cond, Vr_cond: bit := '0';
+
 begin
   
   RA: reg4 port map (
       clock=>  clock, 
       reset=>  RSTa, 
       enable=> CEa,
-      D=>      Va,
+      D=>      Va_unsigned,
       Q=>      s_ra
      );
   
@@ -528,7 +534,7 @@ begin
   
   MUXB: mux4_2to1 port map (
         SEL=> DCb,    
-        A=>   Vb,
+        A=>   Vb_unsigned,
         B=>   s_bmenos1,
         Y=>   s_muxb
         );
@@ -538,7 +544,23 @@ begin
         zero=> Zrb
         );
 
+  Va_cond <= sig_mult_fd and Va(3);
+  Vb_cond <= sig_mult_fd and Vb(3);
+  Vr_cond <= sig_mult_fd and (Va(3) xor Vb(3));
+
+  with Va_cond select
+    Va_unsigned <= bit_vector(unsigned(not Va) + 1) when '1',
+                    Va when others;
+
+  with Vb_cond select
+    Vb_unsigned <= bit_vector(unsigned(not Vb) + 1) when '1',
+                    Vb when others;
+
+  with Vr_cond select
+    Vr_signed <= bit_vector(unsigned(not s_rr) + 1) when '1',
+                  s_rr when others;
+
   s_a8 <= "0000" & s_ra;
-  Vresult <= s_rr;
+  Vresult <= Vr_signed;
   
 end architecture;

@@ -38,7 +38,7 @@ architecture structural of multiplicador is
   component multiplicador_fd
     port (
       clock:    in  bit;
-      signed_mult: in bit;
+      sig_mult_fd: in bit;
       Va,Vb:    in  bit_vector(3 downto 0);
       RSTa,CEa: in  bit;
       RSTb,CEb: in  bit;
@@ -79,7 +79,7 @@ begin
   -- FD usa sinal invertido
   MULT_FD: multiplicador_fd port map (
       clock=>    s_clock_n,
-      signed_mult=> signed_mult,
+      sig_mult_fd=> signed_mult,
       Va=>       Va,
       Vb=>       Vb,
       RSTa=>     s_rsta,
