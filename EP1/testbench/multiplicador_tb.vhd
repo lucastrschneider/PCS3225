@@ -17,6 +17,7 @@ architecture tb of multiplicador_tb is
   component multiplicador
     port (
       Clock:    in  bit;
+      signed_mult: in bit;
       Reset:    in  bit;
       Start:    in  bit;
       Va,Vb:    in  bit_vector(3 downto 0);
@@ -26,7 +27,7 @@ architecture tb of multiplicador_tb is
   end component;
   
   -- Declaração de sinais para conectar a componente
-  signal clk_in: bit := '0';
+  signal clk_in, signed_mult_in: bit := '0';
   signal rst_in, start_in, ready_out: bit := '0';
   signal va_in, vb_in: bit_vector(3 downto 0);
   signal result_out: bit_vector(7 downto 0);
@@ -48,6 +49,7 @@ begin
   -- Conecta DUT (Device Under Test)
   dut: multiplicador
        port map(Clock=>   clk_in,
+                signed_mult=> signed_mult_in,
                 Reset=>   rst_in,
                 Start=>   start_in,
                 Va=>      va_in,

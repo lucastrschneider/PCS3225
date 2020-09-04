@@ -417,6 +417,7 @@ end architecture;
 entity multiplicador_fd is
   port (
     clock:    in  bit;
+    signed_mult: in bit;
     Va,Vb:    in  bit_vector(3 downto 0);
     RSTa,CEa: in  bit;
     RSTb,CEb: in  bit;
