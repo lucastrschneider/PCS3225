@@ -10,7 +10,7 @@
 ###############################################################################
 
 # Current project folder
-EP ?= EP2
+EP ?= EP3
 
 # Include the project specif information
 include $(EP)/description.mk
