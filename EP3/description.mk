@@ -3,10 +3,10 @@
 # 07/2020
 
 # Name of all components in priority order
-CPNT_LIST := reg
+CPNT_LIST := regfile
 
 # Name of the component to be tested
-CPNT ?= reg
+CPNT ?= regfile
 
 # Commands to prepare test files
 PREPARE_TEST :=
