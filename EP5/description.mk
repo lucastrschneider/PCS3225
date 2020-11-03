@@ -3,7 +3,7 @@
 # 07/2020
 
 # Name of all components in priority order
-CPNT_LIST := signExtend alu alucontrol
+CPNT_LIST := signExtend alu alucontrol controlunit
 
 # Name of the component to be tested
 CPNT ?= 
