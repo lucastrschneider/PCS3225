@@ -4,7 +4,7 @@
 --! @author Lucas Schneider (lucastrschneider@usp.br)
 --! @date 2020-11-18
 
---! Last submission:
+--! Last submission: #10546
 -------------------------------------------------------
 
 -------------------------------------------------------
@@ -319,6 +319,8 @@ end architecture;
 
 
 
+
+
 -------------------------------------------------------
 --! @brief PoliLEG datapath
 --! @author Lucas Schneider (lucastrschneider@usp.br)
@@ -480,6 +482,7 @@ end architecture;
 
 
 
+
 -------------------------------------------------------
 --! @brief ALU control from PoliLEG
 --! @ref EP5/alucontrol.vhd
@@ -518,6 +521,7 @@ begin
                     "0000" when others;
 
 end architecture;
+
 
 
 
@@ -610,6 +614,7 @@ end architecture;
 
 
 
+
 -------------------------------------------------------
 --! @brief PoliLEG
 --! @author Lucas Schneider (lucastrschneider@usp.br)
@@ -688,7 +693,42 @@ architecture structural of polilegsc is
         );
     end component;
 
-begin
+    -- Control signals
+    signal reg2loc, uncondBranch, branch, memRead, memToReg,
+            memWrite, aluSrc, regWrite : bit;
+    signal aluOp : bit_vector(1 downto 0);
+    signal pcsrc, zero : bit;
+    signal opcode : bit_vector(10 downto 0);
+    signal aluCtrl : bit_vector(3 downto 0);
 
+    -- Data Memory
+    signal dmem_addr_in, dmem_dati_in : bit_vector(63 downto 0);
+
+    -- Instruction Memory
+    signal imem_addr_in : bit_vector(63 downto 0);
+
+
+begin
+    MAIN_UC: controlunit port map  (reg2loc, uncondBranch, branch, memRead, memToReg,
+                                    aluOp, memWrite, aluSrc, regWrite, opcode);
+    
+    ALU_UC: alucontrol port map (aluOp, opcode, aluCtrl);
+
+    DP: datapath port map  (clock, reset,
+                            reg2loc, pcsrc, memToReg, aluCtrl, aluSrc, regWrite,
+                            opcode, zero,
+                            imem_addr_in, imem_data,
+                            dmem_addr_in, dmem_dati_in, dmem_dato);
+
+
+    pcsrc <= uncondBranch or (branch and zero);
+
+    -- Data Memory
+    dmem_addr <= dmem_addr_in;
+    dmem_dati <= dmem_dati_in;
+    dmem_we <= memWrite;
+
+    -- Instruction Memory
+    imem_addr <= imem_addr_in;
 
 end architecture structural;
