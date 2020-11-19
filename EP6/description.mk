@@ -3,7 +3,7 @@
 # 07/2020
 
 # Name of all components in priority order
-CPNT_LIST := 
+CPNT_LIST := polilegsc
 
 # Name of the component to be tested
 CPNT ?= 
