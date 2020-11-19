@@ -6,7 +6,7 @@
 CPNT_LIST := polilegsc
 
 # Name of the component to be tested
-CPNT ?= 
+CPNT ?= polilegsc
 
 # Commands to prepare test files
 PREPARE_TEST :=
